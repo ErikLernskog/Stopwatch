@@ -2,13 +2,8 @@ package com.lernskog.erik.stopwatch;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 public class StopwatchActivity extends AppCompatActivity {
@@ -16,6 +11,7 @@ public class StopwatchActivity extends AppCompatActivity {
     private int seconds = 0;
     // Is the stopwatch running?
     private boolean running;
+    private boolean wasRunning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +20,48 @@ public class StopwatchActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             seconds = savedInstanceState.getInt("seconds");
             running = savedInstanceState.getBoolean("running");
+            wasRunning = savedInstanceState.getBoolean("wasRunning");
         }
         runTimer();
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        wasRunning = running;
+        running = false;
+    }
+
+    //    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        if (wasRunning) {
+//            running = true;
+//        }
+//    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasRunning) {
+            running = true;
+        }
+    }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        wasRunning = running;
+//        running = false;
+//    }
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putInt("seconds", seconds);
         savedInstanceState.putBoolean("running", running);
+        savedInstanceState.putBoolean("wasRunning", wasRunning);
     }
 
     // Start the stopwatch running when the Start button is clicked
